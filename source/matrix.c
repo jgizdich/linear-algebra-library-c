@@ -62,3 +62,30 @@ MATRIX_STATUS multiplyMatrixWithScalar(MATRIX *matrix, uint8_t scalar) {
 
   return matrixSuccess;
 }
+
+static uint8_t canMatricesBeAdded(MATRIX *matrixA, MATRIX *matrixB) {
+  uint8_t matricesAreNotNull,
+          matricesRowsAndColumnsMatch;
+
+  matricesAreNotNull          = (matrixA != 0) && (matrixB != 0);
+  matricesRowsAndColumnsMatch = (matrixA->rows == matrixB->rows) && (matrixA->columns == matrixB->columns);
+
+  return (matricesAreNotNull && matricesRowsAndColumnsMatch);
+}
+
+MATRIX_STATUS addMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixResults) {
+
+  if (!canMatricesBeAdded(matrixA, matrixB)) {
+    return matrixFailure;
+  }
+
+  setMatrixSize(matrixResults, matrixA->rows, matrixB->columns);
+
+  for (int i = 0; i < matrixResults->rows; i++) {
+    for (int j = 0; j < matrixResults->columns; j++) {
+      matrixResults->data[i][j] = matrixA->data[i][j] + matrixB->data[i][j];
+    }
+  }
+
+  return matrixSuccess;
+}
