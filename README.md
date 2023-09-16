@@ -1,2 +1,2 @@
-# linear-algebra-library-c
-Linear Algebra Library for C development
+# Linear Algebra Library (LAL) Written In C
+This library performs linear algebra computations for your projects.
