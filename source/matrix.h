@@ -1,11 +1,42 @@
+/**
+
+  Copyright (c) 2023 John G. Gizdich III
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+**/
 #ifndef _MATRIX_H_
 #define _MATRIX_H_
 
 #define MAX_NUMBER_OF_ROWS  1000
 #define MAX_NUMBER_OF_COLUMNS 1000
 
-void initializeMatrixWithSingleValue(uint32_t matrix[MAX_NUMBER_OF_ROWS][MAX_NUMBER_OF_COLUMNS], uint32_t rows, uint32_t columns, uint32_t initialValue);
+typedef struct {
+  uint8_t data[MAX_NUMBER_OF_ROWS][MAX_NUMBER_OF_COLUMNS];
+  uint32_t rows;
+  uint32_t columns;
+} MATRIX;
 
-void multiplyMatrixWithScalar(uint32_t scalar, uint32_t matrix[MAX_NUMBER_OF_ROWS][MAX_NUMBER_OF_COLUMNS], uint32_t rows, uint32_t columns);
+void setMatrixSize(MATRIX *matrix, uint32_t rows, uint32_t columns);
+
+void initializeMatrixWithSingleValue(MATRIX *matrix, uint8_t initialValue);
+
+void multiplyMatrixWithScalar(MATRIX *matrix, uint8_t scalar);
 
 #endif // _MATRIX_H_
