@@ -24,18 +24,20 @@
 #include <stdint.h>
 #include "matrix.h"
 
-void setMatrixSize(MATRIX *matrix, uint32_t rows, uint32_t columns) {
+MATRIX_STATUS setMatrixSize(MATRIX *matrix, uint32_t rows, uint32_t columns) {
   if (matrix == 0) {
-    return;
+    return matrixFailure;
   }
 
   matrix->rows = rows;
   matrix->columns = columns;
+
+  return matrixSuccess;
 }
 
-void initializeMatrixWithSingleValue(MATRIX *matrix, uint8_t initialValue) {
+MATRIX_STATUS initializeMatrixWithSingleValue(MATRIX *matrix, uint8_t initialValue) {
   if (matrix == 0) {
-    return;
+    return matrixFailure;
   }
 
   for (int i = 0; i < matrix->rows; i++) {
@@ -43,11 +45,13 @@ void initializeMatrixWithSingleValue(MATRIX *matrix, uint8_t initialValue) {
       matrix->data[i][j] = initialValue;
     }
   }
+
+  return matrixSuccess;
 }
 
-void multiplyMatrixWithScalar(MATRIX *matrix, uint8_t scalar) {
+MATRIX_STATUS multiplyMatrixWithScalar(MATRIX *matrix, uint8_t scalar) {
   if (matrix == 0) {
-    return;
+    return matrixFailure;
   }
 
   for (int i = 0; i < matrix->rows; i++) {
@@ -55,4 +59,6 @@ void multiplyMatrixWithScalar(MATRIX *matrix, uint8_t scalar) {
       matrix->data[i][j] *= scalar;
     }
   }
+
+  return matrixSuccess;
 }

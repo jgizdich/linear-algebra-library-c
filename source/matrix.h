@@ -33,10 +33,15 @@ typedef struct {
   uint32_t columns;
 } MATRIX;
 
-void setMatrixSize(MATRIX *matrix, uint32_t rows, uint32_t columns);
+typedef enum {
+  matrixSuccess,
+  matrixFailure
+} MATRIX_STATUS;
 
-void initializeMatrixWithSingleValue(MATRIX *matrix, uint8_t initialValue);
+MATRIX_STATUS setMatrixSize(MATRIX *matrix, uint32_t rows, uint32_t columns);
 
-void multiplyMatrixWithScalar(MATRIX *matrix, uint8_t scalar);
+MATRIX_STATUS initializeMatrixWithSingleValue(MATRIX *matrix, uint8_t initialValue);
+
+MATRIX_STATUS multiplyMatrixWithScalar(MATRIX *matrix, uint8_t scalar);
 
 #endif // _MATRIX_H_
