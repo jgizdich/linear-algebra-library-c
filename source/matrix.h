@@ -26,12 +26,11 @@
 
 #define MAX_NUMBER_OF_ROWS            1000
 #define MAX_NUMBER_OF_COLUMNS         1000
-#define MAX_NUMBER_FOR_8_BITS_OF_DATA 255
 
 typedef struct {
-  uint8_t data[MAX_NUMBER_OF_ROWS][MAX_NUMBER_OF_COLUMNS];
-  uint32_t rows;
-  uint32_t columns;
+  int16_t   data[MAX_NUMBER_OF_ROWS][MAX_NUMBER_OF_COLUMNS];
+  uint32_t  rows;
+  uint32_t  columns;
 } MATRIX;
 
 typedef enum {

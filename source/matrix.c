@@ -50,8 +50,8 @@ MATRIX_STATUS initializeMatrixWithSingleValue(MATRIX *matrix, uint8_t initialVal
 }
 
 MATRIX_STATUS initializeMatrixWithIncrementalValues(MATRIX *matrix) {
-  uint8_t value = 0;
-
+  int8_t value = 0;
+  
   if (matrix == 0) {
     return matrixFailure;
   }
@@ -59,10 +59,6 @@ MATRIX_STATUS initializeMatrixWithIncrementalValues(MATRIX *matrix) {
   for (int i = 0; i < matrix->rows; i++) {
     for (int j = 0; j < matrix->columns; j++) {
       matrix->data[i][j] = value++;
-
-      if (value == MAX_NUMBER_FOR_8_BITS_OF_DATA) {
-        value = 0;
-      }
     }
   }
 
@@ -156,7 +152,7 @@ MATRIX_STATUS multiplyMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixR
 
 ********************************************/
 
-static uint8_t canMatricesBeAdded(MATRIX *matrixA, MATRIX *matrixB) {
+static uint8_t canMatricesBeAddedOrSubtracted(MATRIX *matrixA, MATRIX *matrixB) {
   uint8_t matricesAreNotNull,
           matricesRowsAndColumnsMatch;
 
@@ -167,7 +163,7 @@ static uint8_t canMatricesBeAdded(MATRIX *matrixA, MATRIX *matrixB) {
 }
 
 MATRIX_STATUS addMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixResults) {
-  if (!canMatricesBeAdded(matrixA, matrixB) || matrixResults == 0) {
+  if (!canMatricesBeAddedOrSubtracted(matrixA, matrixB) || matrixResults == 0) {
     return matrixFailure;
   }
 
@@ -176,6 +172,22 @@ MATRIX_STATUS addMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixResult
   for (int i = 0; i < matrixResults->rows; i++) {
     for (int j = 0; j < matrixResults->columns; j++) {
       matrixResults->data[i][j] = matrixA->data[i][j] + matrixB->data[i][j];
+    }
+  }
+
+  return matrixSuccess;
+}
+
+MATRIX_STATUS SubtractMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixResults) {
+  if (!canMatricesBeAddedOrSubtracted(matrixA, matrixB) || matrixResults == 0) {
+    return matrixFailure;
+  }
+
+  setMatrixSize(matrixResults, matrixA->rows, matrixB->columns);
+
+  for (int i = 0; i < matrixResults->rows; i++) {
+    for (int j = 0; j < matrixResults->columns; j++) {
+      matrixResults->data[i][j] = matrixA->data[i][j] - matrixB->data[i][j];
     }
   }
 
