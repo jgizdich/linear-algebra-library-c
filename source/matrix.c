@@ -49,6 +49,12 @@ MATRIX_STATUS initializeMatrixWithSingleValue(MATRIX *matrix, uint8_t initialVal
   return matrixSuccess;
 }
 
+/*******************************************
+
+  Start of matrix multiplication functions
+
+********************************************/
+
 MATRIX_STATUS multiplyMatrixWithScalar(MATRIX *matrix, uint8_t scalar) {
   if (matrix == 0) {
     return matrixFailure;
@@ -57,32 +63,6 @@ MATRIX_STATUS multiplyMatrixWithScalar(MATRIX *matrix, uint8_t scalar) {
   for (int i = 0; i < matrix->rows; i++) {
     for (int j = 0; j < matrix->columns; j++) {
       matrix->data[i][j] *= scalar;
-    }
-  }
-
-  return matrixSuccess;
-}
-
-static uint8_t canMatricesBeAdded(MATRIX *matrixA, MATRIX *matrixB) {
-  uint8_t matricesAreNotNull,
-          matricesRowsAndColumnsMatch;
-
-  matricesAreNotNull          = (matrixA != 0) && (matrixB != 0);
-  matricesRowsAndColumnsMatch = (matrixA->rows == matrixB->rows) && (matrixA->columns == matrixB->columns);
-
-  return (matricesAreNotNull && matricesRowsAndColumnsMatch);
-}
-
-MATRIX_STATUS addMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixResults) {
-  if (!canMatricesBeAdded(matrixA, matrixB) || matrixResults == 0) {
-    return matrixFailure;
-  }
-
-  setMatrixSize(matrixResults, matrixA->rows, matrixB->columns);
-
-  for (int i = 0; i < matrixResults->rows; i++) {
-    for (int j = 0; j < matrixResults->columns; j++) {
-      matrixResults->data[i][j] = matrixA->data[i][j] + matrixB->data[i][j];
     }
   }
 
@@ -125,3 +105,47 @@ MATRIX_STATUS multiplyMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixR
 
   return matrixSuccess;
 }
+
+/*******************************************
+
+  End of matrix multiplication functions
+
+********************************************/
+
+/*******************************************
+
+  Start of matrix addition functions
+
+********************************************/
+
+static uint8_t canMatricesBeAdded(MATRIX *matrixA, MATRIX *matrixB) {
+  uint8_t matricesAreNotNull,
+          matricesRowsAndColumnsMatch;
+
+  matricesAreNotNull          = (matrixA != 0) && (matrixB != 0);
+  matricesRowsAndColumnsMatch = (matrixA->rows == matrixB->rows) && (matrixA->columns == matrixB->columns);
+
+  return (matricesAreNotNull && matricesRowsAndColumnsMatch);
+}
+
+MATRIX_STATUS addMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixResults) {
+  if (!canMatricesBeAdded(matrixA, matrixB) || matrixResults == 0) {
+    return matrixFailure;
+  }
+
+  setMatrixSize(matrixResults, matrixA->rows, matrixB->columns);
+
+  for (int i = 0; i < matrixResults->rows; i++) {
+    for (int j = 0; j < matrixResults->columns; j++) {
+      matrixResults->data[i][j] = matrixA->data[i][j] + matrixB->data[i][j];
+    }
+  }
+
+  return matrixSuccess;
+}
+
+/*******************************************
+
+  End of matrix addition functions
+
+********************************************/
