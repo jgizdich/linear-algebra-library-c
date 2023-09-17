@@ -74,8 +74,7 @@ static uint8_t canMatricesBeAdded(MATRIX *matrixA, MATRIX *matrixB) {
 }
 
 MATRIX_STATUS addMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixResults) {
-
-  if (!canMatricesBeAdded(matrixA, matrixB)) {
+  if (!canMatricesBeAdded(matrixA, matrixB) || matrixResults == 0) {
     return matrixFailure;
   }
 
@@ -84,6 +83,43 @@ MATRIX_STATUS addMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixResult
   for (int i = 0; i < matrixResults->rows; i++) {
     for (int j = 0; j < matrixResults->columns; j++) {
       matrixResults->data[i][j] = matrixA->data[i][j] + matrixB->data[i][j];
+    }
+  }
+
+  return matrixSuccess;
+}
+
+static uint8_t canMatricesBeMultiplied(MATRIX *matrixA, MATRIX *matrixB) {
+  uint8_t matricesAreNotNull,
+          matrixAColumnsMatchWithMatrixBRows;
+
+  matricesAreNotNull                  = (matrixA != 0) && (matrixB != 0);
+  matrixAColumnsMatchWithMatrixBRows  = (matrixA->columns == matrixB->rows);
+
+  return (matricesAreNotNull && matrixAColumnsMatchWithMatrixBRows);
+}
+
+MATRIX_STATUS multiplyMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixResults) {
+  uint8_t sum;
+
+  if (!canMatricesBeMultiplied(matrixA, matrixB) || matrixResults == 0) {
+    return matrixFailure;
+  }
+
+  setMatrixSize(matrixResults, matrixA->rows, matrixB->columns);
+
+  initializeMatrixWithSingleValue(matrixResults, 0);
+
+  for (int i = 0; i < matrixA->rows; i++) {
+    for (int j = 0; j < matrixB->columns; j++) {
+      sum = 0;
+      for (int k = 0; k < matrixB->rows; k++) {
+        // Read column by column for Matrix A and read row by row for Matrix B per iteration.
+        // Perform dot product to fill the output matrix.
+        sum += matrixA->data[i][k] * matrixB->data[k][j];
+      }
+
+      matrixResults->data[i][j] = sum;
     }
   }
 
