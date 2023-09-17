@@ -24,8 +24,9 @@
 #ifndef _MATRIX_H_
 #define _MATRIX_H_
 
-#define MAX_NUMBER_OF_ROWS  1000
-#define MAX_NUMBER_OF_COLUMNS 1000
+#define MAX_NUMBER_OF_ROWS            1000
+#define MAX_NUMBER_OF_COLUMNS         1000
+#define MAX_NUMBER_FOR_8_BITS_OF_DATA 255
 
 typedef struct {
   uint8_t data[MAX_NUMBER_OF_ROWS][MAX_NUMBER_OF_COLUMNS];
@@ -40,6 +41,8 @@ typedef enum {
 
 MATRIX_STATUS setMatrixSize(MATRIX *matrix, uint32_t rows, uint32_t columns);
 MATRIX_STATUS initializeMatrixWithSingleValue(MATRIX *matrix, uint8_t initialValue);
+MATRIX_STATUS initializeMatrixWithIncrementalValues(MATRIX *matrix);
+MATRIX_STATUS transposeMatrix(MATRIX *matrix, MATRIX *matrixResults);
 MATRIX_STATUS multiplyMatrixWithScalar(MATRIX *matrix, uint8_t scalar);
 MATRIX_STATUS multiplyMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixResults);
 MATRIX_STATUS addMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixResults);

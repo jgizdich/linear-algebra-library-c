@@ -49,6 +49,44 @@ MATRIX_STATUS initializeMatrixWithSingleValue(MATRIX *matrix, uint8_t initialVal
   return matrixSuccess;
 }
 
+MATRIX_STATUS initializeMatrixWithIncrementalValues(MATRIX *matrix) {
+  uint8_t value = 0;
+
+  if (matrix == 0) {
+    return matrixFailure;
+  }
+
+  for (int i = 0; i < matrix->rows; i++) {
+    for (int j = 0; j < matrix->columns; j++) {
+      matrix->data[i][j] = value++;
+
+      if (value == MAX_NUMBER_FOR_8_BITS_OF_DATA) {
+        value = 0;
+      }
+    }
+  }
+
+  return matrixSuccess;
+}
+
+MATRIX_STATUS transposeMatrix(MATRIX *matrix, MATRIX *matrixResults) {
+  if ((matrix == 0) || (matrixResults == 0)) {
+    return matrixFailure;
+  }
+
+  setMatrixSize(matrixResults, matrix->columns, matrix->rows);
+
+  initializeMatrixWithSingleValue(matrixResults, 0);
+
+  for (int i = 0; i < matrix->columns; i++) {
+    for (int j = 0; j < matrix->rows; j++) {
+      matrixResults->data[i][j] = matrix->data[j][i];
+    }
+  }
+
+  return matrixSuccess;
+}
+
 /*******************************************
 
   Start of matrix multiplication functions
