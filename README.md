@@ -38,4 +38,16 @@ A matrix can be transposed as shown above by using the transposeMatrix function.
 ```C
 MATRIX_STATUS transposeMatrix(MATRIX *matrix, MATRIX *matrixResults);
 ```
-The first parameter is an input matrix to be transposed, and the second parameter is the transposed version of the input matrix. The caller is expected to declare the output matrix as well and pass it by reference to this function. The function automatically sets the size of the newly transposed matrix.
+The first parameter is an input matrix to be transposed, and the second parameter is the transposed version of the input matrix. The caller is expected to declare the output matrix as well and pass it by reference to this function. The function automatically sets the size of the newly transposed matrix and populates its data entry accordingly via the transpose operation rules.
+
+## Scalar Multiplication
+```math
+cA = \begin{bmatrix}1c & 2c & 3c\\4c & 5c & 6c \end{bmatrix}
+```
+A matrix can be multiplied by any scalar value as shown above by using the multiplyMatrixWithScalar function. The declaration of that function is shown below.
+
+```c
+MATRIX_STATUS multiplyMatrixWithScalar(MATRIX *matrix, uint8_t scalar);
+```
+
+The first parameter is an input matrix to be multiplied by a scalar value, and the second parameter is the scalar value itself. This function overrides the input matrix's data by multiplying each entry in the matrix by the scalar value. Therefore, the first parameter is also an output matrix when the function returns to the caller. There is no need to declare another matrix for this function since the matrix's shape does not change.
