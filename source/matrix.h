@@ -28,7 +28,7 @@
 #define MAX_NUMBER_OF_COLUMNS         1000
 
 typedef struct {
-  int16_t  data[MAX_NUMBER_OF_ROWS][MAX_NUMBER_OF_COLUMNS];
+  uint8_t  data[MAX_NUMBER_OF_ROWS][MAX_NUMBER_OF_COLUMNS];
   uint32_t numberOfRows;
   uint32_t numberOfColumns;
   uint32_t initializedSignature;
