@@ -49,4 +49,4 @@ A matrix can be multiplied by any scalar value as shown above by using the multi
 MATRIX_STATUS multiplyMatrixWithScalar(MATRIX *matrix, uint8_t scalar);
 ```
 
-The first parameter is an input matrix to be multiplied by a scalar value, and the second parameter is the scalar value itself. This function overrides the input matrix's data by multiplying each entry in the matrix by the scalar value. Therefore, the first parameter is also an output matrix when the function returns to the caller. There is no need to declare another matrix for this function since the matrix's shape does not change.
+The first parameter is an input matrix to be multiplied by a scalar value, and the second parameter is the scalar value itself. This function overrides the input matrix's data by multiplying each entry in the matrix by the scalar value. Therefore, the first parameter is also an output matrix when the function returns to the caller.
