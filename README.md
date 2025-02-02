@@ -27,3 +27,15 @@ The data entries in a matrix can be populated as shown below where num is any si
 ```C
 matrix->data[row][col] = num;
 ```
+
+## Transpose
+```math
+A = \begin{bmatrix}1 & 2 & 3\\4 & 5 & 6 \end{bmatrix} \\\ \\\ A^T = \begin{bmatrix}1 & 4\\2 & 5\\3 & 6 \end{bmatrix}
+```
+
+A matrix can be transposed as shown above by using the transposeMatrix function. The declaration of that function is shown below.
+
+```C
+MATRIX_STATUS transposeMatrix(MATRIX *matrix, MATRIX *matrixResults);
+```
+The first parameter is an input matrix to be transposed, and the second parameter is the transposed version of the input matrix. The caller is expected to declare the output matrix as well and pass it by reference to this function. The function automatically sets the size of the newly transposed matrix.
