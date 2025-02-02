@@ -36,9 +36,8 @@ A = \begin{bmatrix}1 & 2 & 3\\4 & 5 & 6 \end{bmatrix} \\\ \\\ A^T = \begin{bmatr
 A matrix can be transposed as shown above by using the transposeMatrix function. The declaration of that function is shown below.
 
 ```C
-MATRIX_STATUS transposeMatrix(MATRIX *matrix, MATRIX *matrixResults);
+MATRIX_STATUS transposeMatrix(MATRIX *matrix);
 ```
-The first parameter is an input matrix to be transposed, and the second parameter is the transposed version of the input matrix. The caller is expected to declare the output matrix as well and pass it by reference to this function. The function automatically sets the size of the newly transposed matrix and populates its data entry accordingly via the transpose operation rules.
 
 ## Scalar Multiplication
 ```math
