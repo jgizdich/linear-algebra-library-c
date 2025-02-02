@@ -1,6 +1,6 @@
 /**
 
-  Copyright (c) 2023 John G. Gizdich III
+  Copyright (c) 2023-2025 John G. Gizdich III
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,13 @@
 #include <stdint.h>
 #include "matrix.h"
 
-MATRIX_STATUS setMatrixSize(MATRIX *matrix, uint32_t rows, uint32_t columns) {
+MATRIX_STATUS setMatrixSize(MATRIX *matrix, uint32_t numberOfRows, uint32_t numberOfColumns) {
   if (matrix == 0) {
     return matrixFailure;
   }
 
-  matrix->rows = rows;
-  matrix->columns = columns;
+  matrix->numberOfRows = numberOfRows;
+  matrix->numberOfColumns = numberOfColumns;
 
   return matrixSuccess;
 }
@@ -40,8 +40,8 @@ MATRIX_STATUS initializeMatrixWithSingleValue(MATRIX *matrix, uint8_t initialVal
     return matrixFailure;
   }
 
-  for (int i = 0; i < matrix->rows; i++) {
-    for (int j = 0; j < matrix->columns; j++) {
+  for (int i = 0; i < matrix->numberOfRows; i++) {
+    for (int j = 0; j < matrix->numberOfColumns; j++) {
       matrix->data[i][j] = initialValue;
     }
   }
@@ -56,11 +56,49 @@ MATRIX_STATUS initializeMatrixWithIncrementalValues(MATRIX *matrix) {
     return matrixFailure;
   }
 
-  for (int i = 0; i < matrix->rows; i++) {
-    for (int j = 0; j < matrix->columns; j++) {
+  for (int i = 0; i < matrix->numberOfRows; i++) {
+    for (int j = 0; j < matrix->numberOfColumns; j++) {
       matrix->data[i][j] = value++;
     }
   }
+
+  return matrixSuccess;
+}
+
+static uint8_t isMatrixInitialized (MATRIX *matrix) {
+  return (matrix->initializedSignature == 0xDEADBEEF);
+}
+
+void initializeMatrix (MATRIX *matrix) {
+  matrix->initializedSignature = 0xDEADBEEF;
+  matrix->numberOfRows = 1;
+  matrix->numberOfColumns = 1;
+}
+
+MATRIX_STATUS insertMatrixDataEntry(MATRIX *matrix, uint16_t row, uint16_t col, int16_t dataEntry) {
+  uint16_t rowNumber;
+  uint16_t colNumber;
+
+  if (matrix == 0) {
+    return matrixFailure;
+  }
+
+  if (!isMatrixInitialized(matrix)) {
+    initializeMatrix (matrix);
+  }
+
+  rowNumber = row + 1;
+  colNumber = col + 1;
+
+  if (rowNumber > matrix->numberOfRows) {
+    matrix->numberOfRows = rowNumber;
+  }
+
+  if (colNumber > matrix->numberOfColumns) {
+    matrix->numberOfColumns = colNumber;
+  }
+
+  matrix->data[row][col] = dataEntry;
 
   return matrixSuccess;
 }
@@ -70,11 +108,11 @@ static MATRIX_STATUS copyMatrix(MATRIX *matrixA, MATRIX *matrixB) {
     return matrixFailure;
   }
 
-  matrixB->rows = matrixA->rows;
-  matrixB->columns = matrixA->columns;
+  matrixB->numberOfRows = matrixA->numberOfRows;
+  matrixB->numberOfColumns = matrixA->numberOfColumns;
 
-  for (int i = 0; i < matrixA->rows; i++) {
-    for (int j = 0; j < matrixA->columns; j++) {
+  for (int i = 0; i < matrixA->numberOfRows; i++) {
+    for (int j = 0; j < matrixA->numberOfColumns; j++) {
       matrixB->data[i][j] = matrixA->data[i][j];
     }
   }
@@ -98,11 +136,11 @@ MATRIX_STATUS transposeMatrix(MATRIX *matrix) {
     return matrixStatus;
   }
 
-  matrix->rows = tempMatrix.columns;
-  matrix->columns = tempMatrix.rows;
+  matrix->numberOfRows = tempMatrix.numberOfColumns;
+  matrix->numberOfColumns = tempMatrix.numberOfRows;
 
-  for (int i = 0; i < matrix->rows; i++) {
-    for (int j = 0; j < matrix->columns; j++) {
+  for (int i = 0; i < matrix->numberOfRows; i++) {
+    for (int j = 0; j < matrix->numberOfColumns; j++) {
       matrix->data[i][j] = tempMatrix.data[j][i];
     }
   }
@@ -121,8 +159,8 @@ MATRIX_STATUS multiplyMatrixWithScalar(MATRIX *matrix, uint8_t scalar) {
     return matrixFailure;
   }
 
-  for (int i = 0; i < matrix->rows; i++) {
-    for (int j = 0; j < matrix->columns; j++) {
+  for (int i = 0; i < matrix->numberOfRows; i++) {
+    for (int j = 0; j < matrix->numberOfColumns; j++) {
       matrix->data[i][j] *= scalar;
     }
   }
@@ -135,7 +173,7 @@ static uint8_t canMatricesBeMultiplied(MATRIX *matrixA, MATRIX *matrixB) {
           matrixAColumnsMatchWithMatrixBRows;
 
   matricesAreNotNull                  = (matrixA != 0) && (matrixB != 0);
-  matrixAColumnsMatchWithMatrixBRows  = (matrixA->columns == matrixB->rows);
+  matrixAColumnsMatchWithMatrixBRows  = (matrixA->numberOfColumns == matrixB->numberOfRows);
 
   return (matricesAreNotNull && matrixAColumnsMatchWithMatrixBRows);
 }
@@ -147,14 +185,14 @@ MATRIX_STATUS multiplyMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixR
     return matrixFailure;
   }
 
-  setMatrixSize(matrixResults, matrixA->rows, matrixB->columns);
+  setMatrixSize(matrixResults, matrixA->numberOfRows, matrixB->numberOfColumns);
 
   initializeMatrixWithSingleValue(matrixResults, 0);
 
-  for (int i = 0; i < matrixA->rows; i++) {
-    for (int j = 0; j < matrixB->columns; j++) {
+  for (int i = 0; i < matrixA->numberOfRows; i++) {
+    for (int j = 0; j < matrixB->numberOfColumns; j++) {
       sum = 0;
-      for (int k = 0; k < matrixB->rows; k++) {
+      for (int k = 0; k < matrixB->numberOfRows; k++) {
         // Read column by column for Matrix A and read row by row for Matrix B per iteration.
         // Perform dot product to fill the output matrix.
         sum += matrixA->data[i][k] * matrixB->data[k][j];
@@ -184,7 +222,7 @@ static uint8_t canMatricesBeAddedOrSubtracted(MATRIX *matrixA, MATRIX *matrixB) 
           matricesRowsAndColumnsMatch;
 
   matricesAreNotNull          = (matrixA != 0) && (matrixB != 0);
-  matricesRowsAndColumnsMatch = (matrixA->rows == matrixB->rows) && (matrixA->columns == matrixB->columns);
+  matricesRowsAndColumnsMatch = (matrixA->numberOfRows == matrixB->numberOfRows) && (matrixA->numberOfColumns == matrixB->numberOfColumns);
 
   return (matricesAreNotNull && matricesRowsAndColumnsMatch);
 }
@@ -194,10 +232,10 @@ MATRIX_STATUS addMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixResult
     return matrixFailure;
   }
 
-  setMatrixSize(matrixResults, matrixA->rows, matrixB->columns);
+  setMatrixSize(matrixResults, matrixA->numberOfRows, matrixB->numberOfColumns);
 
-  for (int i = 0; i < matrixResults->rows; i++) {
-    for (int j = 0; j < matrixResults->columns; j++) {
+  for (int i = 0; i < matrixResults->numberOfRows; i++) {
+    for (int j = 0; j < matrixResults->numberOfColumns; j++) {
       matrixResults->data[i][j] = matrixA->data[i][j] + matrixB->data[i][j];
     }
   }
@@ -210,10 +248,10 @@ MATRIX_STATUS SubtractMatrices(MATRIX *matrixA, MATRIX *matrixB, MATRIX *matrixR
     return matrixFailure;
   }
 
-  setMatrixSize(matrixResults, matrixA->rows, matrixB->columns);
+  setMatrixSize(matrixResults, matrixA->numberOfRows, matrixB->numberOfColumns);
 
-  for (int i = 0; i < matrixResults->rows; i++) {
-    for (int j = 0; j < matrixResults->columns; j++) {
+  for (int i = 0; i < matrixResults->numberOfRows; i++) {
+    for (int j = 0; j < matrixResults->numberOfColumns; j++) {
       matrixResults->data[i][j] = matrixA->data[i][j] - matrixB->data[i][j];
     }
   }

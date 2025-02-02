@@ -1,6 +1,6 @@
 /**
 
-  Copyright (c) 2023 John G. Gizdich III
+  Copyright (c) 2023-2025 John G. Gizdich III
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,10 @@
 #define MAX_NUMBER_OF_COLUMNS         1000
 
 typedef struct {
-  int16_t   data[MAX_NUMBER_OF_ROWS][MAX_NUMBER_OF_COLUMNS];
-  uint32_t  rows;
-  uint32_t  columns;
+  int16_t  data[MAX_NUMBER_OF_ROWS][MAX_NUMBER_OF_COLUMNS];
+  uint32_t numberOfRows;
+  uint32_t numberOfColumns;
+  uint32_t initializedSignature;
 } MATRIX;
 
 typedef enum {
@@ -38,7 +39,8 @@ typedef enum {
   matrixFailure
 } MATRIX_STATUS;
 
-MATRIX_STATUS setMatrixSize(MATRIX *matrix, uint32_t rows, uint32_t columns);
+MATRIX_STATUS setMatrixSize(MATRIX *matrix, uint32_t numberOfRows, uint32_t numberOfColumns);
+MATRIX_STATUS insertMatrixDataEntry(MATRIX *matrix, uint16_t row, uint16_t col, int16_t dataEntry);
 MATRIX_STATUS initializeMatrixWithSingleValue(MATRIX *matrix, uint8_t initialValue);
 MATRIX_STATUS initializeMatrixWithIncrementalValues(MATRIX *matrix);
 MATRIX_STATUS transposeMatrix(MATRIX *matrix);
